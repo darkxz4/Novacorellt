@@ -1,1086 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Your Agency — Digital Marketing</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E2236">
+<title>Grey Inn Stays – Room Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --black: #0a0a0a;
-    --white: #f5f0e8;
-    --cream: #ede8dc;
-    --gold: #c9a84c;
-    --gold2: #e8c96a;
-    --dark: #111108;
-    --gray: #2a2a25;
-  }
+:root{
+  --ink:#0E2236;
+  --ink-2:#16324D;
+  --mist:#C9D6E4;
+  --paper:#F7F9FC;
+  --occupied-1:#FF6B6B;
+  --occupied-2:#D62F48;
+  --ready-1:#5CE59A;
+  --ready-2:#22B866;
+  --ready-ink:#04301C;
+  --clean-ink:#9A4A06;
+  --radius:24px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Figtree','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:var(--body);
+  color:var(--paper);
+  background:var(--ink);
+  background-image:
+    radial-gradient(60vmax 40vmax at 90% -10%, rgba(255,107,107,.22), transparent 60%),
+    radial-gradient(55vmax 45vmax at -10% 20%, rgba(92,229,154,.16), transparent 60%),
+    radial-gradient(70vmax 50vmax at 50% 120%, rgba(90,140,255,.22), transparent 60%);
+  background-attachment:fixed;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
+  user-select:none;-webkit-user-select:none;
+}
+.app{max-width:960px;margin:0 auto}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* top bar */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,38px);letter-spacing:-.02em;line-height:1}
+.brand p{color:var(--mist);font-size:14px;margin-top:6px}
+.clock{text-align:right;font-family:var(--display);font-weight:700;font-size:clamp(22px,5vw,30px);letter-spacing:-.01em;line-height:1}
+.clock small{display:block;font-family:var(--body);font-weight:500;font-size:13px;color:var(--mist);margin-top:6px;letter-spacing:0}
 
-  html { scroll-behavior: smooth; }
+/* summary chips (also filters) */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat{
+  appearance:none;border:1px solid rgba(255,255,255,.14);cursor:pointer;color:inherit;font:inherit;text-align:left;
+  background:rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;
+  transition:transform .18s ease,background .2s,border-color .2s;
+}
+.stat:active{transform:scale(.97)}
+.stat[aria-pressed="true"]{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.55)}
+.stat .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.stat .lbl{font-size:13px;color:var(--mist);display:flex;align-items:center}
+.stat .num{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em}
+.d-occ{background:var(--occupied-1)} .d-cln{background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.35)} .d-rdy{background:var(--ready-1)}
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* section head */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:6px 4px 12px}
+.sec h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em}
+.sec button{
+  appearance:none;border:0;background:transparent;color:var(--mist);font:inherit;font-size:13px;cursor:pointer;
+  padding:8px 10px;border-radius:10px;text-decoration:underline;text-underline-offset:3px
+}
+.sec button:hover{color:#fff}
 
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed;
-    width: 12px; height: 12px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(201,168,76,0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
-  }
-  body:hover .cursor { opacity: 1; }
+/* room grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+@media(min-width:820px){.grid{grid-template-columns:repeat(6,1fr)}}
 
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
+.room{
+  position:relative;overflow:hidden;appearance:none;border:0;cursor:pointer;font:inherit;text-align:left;
+  aspect-ratio:1/1.08;border-radius:var(--radius);padding:14px 14px 12px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--paper);color:var(--ink);
+  box-shadow:0 10px 28px -10px rgba(0,0,0,.55), inset 0 -2px 0 rgba(14,34,54,.06);
+  transition:transform .16s ease,opacity .25s,filter .25s,box-shadow .25s;
+  touch-action:manipulation;
+}
+.room:active{transform:scale(.94)}
+.room:focus-visible,.stat:focus-visible,.tab:focus-visible,.sec button:focus-visible,.toast button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.room .no{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,42px);letter-spacing:-.03em;line-height:1}
+.room .ico{position:absolute;right:12px;top:12px;width:30px;height:30px;opacity:.9}
+.room .ico svg{width:100%;height:100%}
+.room .st{font-weight:600;font-size:14px;line-height:1.2}
+.room .since{font-size:12px;opacity:.75;margin-top:2px;min-height:15px}
 
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 28px 60px;
-    mix-blend-mode: normal;
-  }
-  nav::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(10,10,10,0.9) 0%, transparent 100%);
-    z-index: -1;
-  }
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 4px;
-    color: var(--gold);
-  }
-  .nav-links {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--white);
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.7;
-    transition: opacity 0.3s, color 0.3s;
-  }
-  .nav-links a:hover { opacity: 1; color: var(--gold); }
+.room.occupied{background:linear-gradient(155deg,var(--occupied-1),var(--occupied-2));color:#fff;box-shadow:0 14px 30px -10px rgba(214,47,72,.7)}
+.room.ready{background:linear-gradient(155deg,var(--ready-1),var(--ready-2));color:var(--ready-ink);box-shadow:0 14px 30px -10px rgba(34,184,102,.65)}
+.room.cleaning{color:var(--ink)}
+.room.cleaning .st{color:var(--clean-ink)}
+.room.cleaning::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,170,60,.28) 50%,transparent 65%);
+  background-size:250% 100%;animation:sweep 2.2s linear infinite;
+}
+@keyframes sweep{from{background-position:120% 0}to{background-position:-120% 0}}
+.room.dim{opacity:.22;filter:saturate(.4)}
+.room.pop{animation:pop .42s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
 
-  /* HERO */
-  .hero {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    padding: 80px 60px;
-  }
-  .hero-slides {
-    position: absolute;
-    inset: 0;
-  }
-  .hero-slide {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transform: scale(1.08);
-    transition: opacity 1.2s cubic-bezier(.4,0,.2,1), transform 6s cubic-bezier(.4,0,.2,1);
-  }
-  .hero-slide.active {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .hero-slide::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(10,10,8,0.75) 0%, rgba(10,10,8,0.3) 50%, rgba(10,10,8,0.6) 100%);
-  }
-  .hero-content {
-    position: relative;
-    z-index: 10;
-    max-width: 800px;
-  }
-  .hero-tag {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .hero-tag::before {
-    content: '';
-    width: 40px; height: 1px;
-    background: var(--gold);
-  }
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(64px, 10vw, 130px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    margin-bottom: 32px;
-  }
-  .hero-title em {
-    font-family: 'Playfair Display', serif;
-    color: var(--gold);
-    font-size: 0.75em;
-  }
-  .hero-sub {
-    font-size: 15px;
-    line-height: 1.7;
-    opacity: 0.65;
-    max-width: 420px;
-    margin-bottom: 48px;
-  }
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    background: var(--gold);
-    color: var(--black);
-    padding: 16px 36px;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background 0.3s, gap 0.3s;
-  }
-  .hero-cta:hover { background: var(--gold2); gap: 24px; }
-  .hero-cta-arrow { font-size: 18px; }
+/* bottom floor switch */
+.dock{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;gap:6px;padding:6px;border-radius:26px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);
+  z-index:5;
+}
+.tab{
+  appearance:none;border:0;cursor:pointer;font:inherit;color:var(--mist);background:transparent;
+  padding:12px 22px;border-radius:20px;font-weight:600;font-size:15px;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;transition:background .25s,color .25s;
+}
+.tab[aria-selected="true"]{background:var(--paper);color:var(--ink)}
+.tab .badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,.9);color:#fff}
+.tab .badge:empty{display:none}
 
-  .hero-dots {
-    position: absolute;
-    right: 60px;
-    bottom: 80px;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .hero-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: rgba(245,240,232,0.3);
-    cursor: none;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .hero-dot.active { background: var(--gold); transform: scale(1.5); }
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:var(--paper);color:var(--ink);padding:10px 12px 10px 16px;border-radius:16px;
+  display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500;box-shadow:0 14px 34px -8px rgba(0,0,0,.6);
+  transition:opacity .25s,transform .25s;z-index:6;max-width:calc(100vw - 32px);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{appearance:none;border:0;background:var(--ink);color:#fff;font:inherit;font-weight:600;font-size:13px;padding:8px 14px;border-radius:10px;cursor:pointer}
 
-  .hero-scroll {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.4;
-  }
-  .hero-scroll span {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-  }
-  .scroll-line {
-    width: 1px; height: 50px;
-    background: var(--white);
-    animation: scrollLine 2s ease-in-out infinite;
-  }
-  @keyframes scrollLine {
-    0% { transform: scaleY(0); transform-origin: top; }
-    50% { transform: scaleY(1); transform-origin: top; }
-    51% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
+.hint{margin:22px 4px 0;color:var(--mist);font-size:13px;line-height:1.5}
+.hint b{color:#fff;font-weight:600}
 
-  /* SECTION BASE */
-  section { position: relative; }
-
-  /* ABOUT / OFFER */
-  .offer {
-    padding: 140px 60px;
-    background: var(--dark);
-    position: relative;
-    overflow: hidden;
-  }
-  .offer::before {
-    content: 'FREE';
-    position: absolute;
-    right: -40px; top: 40px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 280px;
-    color: rgba(201,168,76,0.04);
-    line-height: 1;
-    pointer-events: none;
-  }
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::before {
-    content: '';
-    width: 30px; height: 1px;
-    background: var(--gold);
-  }
-  .offer-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 100px;
-    align-items: center;
-  }
-  .offer-left h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 1;
-    letter-spacing: 2px;
-    margin-bottom: 28px;
-  }
-  .offer-left h2 span { color: var(--gold); }
-  .offer-left p {
-    font-size: 15px;
-    line-height: 1.8;
-    opacity: 0.6;
-    max-width: 380px;
-  }
-
-  .offer-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .offer-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 32px 36px;
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    transition: background 0.3s, border-color 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .offer-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--gold);
-    transform: scaleY(0);
-    transition: transform 0.3s;
-  }
-  .offer-card:hover { background: rgba(201,168,76,0.05); border-color: rgba(201,168,76,0.2); }
-  .offer-card:hover::before { transform: scaleY(1); }
-  .offer-icon {
-    font-size: 28px;
-    width: 56px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .offer-card-text h3 {
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-  .offer-card-text p {
-    font-size: 13px;
-    opacity: 0.5;
-    line-height: 1.5;
-  }
-
-  /* HOW IT WORKS */
-  .how {
-    padding: 140px 60px;
-    background: var(--black);
-  }
-  .how-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    letter-spacing: 2px;
-    margin-bottom: 80px;
-    line-height: 1;
-  }
-  .how-title span { color: var(--gold); }
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .step {
-    padding: 60px 40px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-    transition: background 0.4s;
-  }
-  .step:hover { background: rgba(201,168,76,0.04); }
-  .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 100px;
-    color: rgba(201,168,76,0.08);
-    line-height: 1;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .step h3 {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-  .step p {
-    font-size: 13px;
-    line-height: 1.8;
-    opacity: 0.55;
-  }
-  .step-line {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(to right, var(--gold), transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s;
-  }
-  .step:hover .step-line { transform: scaleX(1); }
-
-  /* WORK / PORTFOLIO */
-  .work {
-    padding: 140px 60px;
-    background: var(--dark);
-  }
-  .work-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 60px;
-  }
-  .work-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-  .work-title span { color: var(--gold); }
-  .work-note {
-    font-size: 12px;
-    opacity: 0.4;
-    letter-spacing: 1px;
-    max-width: 200px;
-    text-align: right;
-    line-height: 1.6;
-  }
-  /* SWIPER */
-  .swiper-wrapper-outer {
-    position: relative;
-    overflow: hidden;
-  }
-  .swiper-track {
-    display: flex;
-    gap: 20px;
-    transition: transform 0.7s cubic-bezier(.4,0,.2,1);
-    will-change: transform;
-  }
-  .work-card {
-    min-width: 380px;
-    height: 500px;
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-    cursor: none;
-  }
-  .work-card img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transform: scale(1.05);
-    transition: transform 0.8s cubic-bezier(.4,0,.2,1);
-    display: block;
-  }
-  .work-card:hover img { transform: scale(1); }
-  .work-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(10,10,8,0.95) 0%, transparent 60%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 32px;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: opacity 0.4s, transform 0.4s;
-  }
-  .work-card:hover .work-card-overlay { opacity: 1; transform: translateY(0); }
-  .work-card-overlay h3 { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
-  .work-card-overlay p { font-size: 12px; opacity: 0.5; letter-spacing: 1px; text-transform: uppercase; }
-  .work-card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-decoration: none;
-    transition: gap 0.3s;
-  }
-  .work-card-link:hover { gap: 14px; }
-
-  .swiper-nav {
-    display: flex;
-    gap: 12px;
-    margin-top: 40px;
-    justify-content: flex-end;
-  }
-  .swiper-btn {
-    width: 52px; height: 52px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: transparent;
-    color: var(--white);
-    font-size: 20px;
-    cursor: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s, border-color 0.3s, color 0.3s;
-  }
-  .swiper-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
-
-  /* PRICING */
-  .pricing {
-    padding: 140px 60px;
-    background: var(--black);
-    text-align: center;
-  }
-  .pricing-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 6vw, 80px);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-  .pricing-title span { color: var(--gold); }
-  .pricing-sub {
-    font-size: 14px;
-    opacity: 0.5;
-    margin-bottom: 80px;
-    letter-spacing: 1px;
-  }
-  .pricing-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .pricing-card {
-    padding: 60px 48px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    text-align: left;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
-  }
-  .pricing-card.featured {
-    background: rgba(201,168,76,0.07);
-    border-color: rgba(201,168,76,0.3);
-  }
-  .pricing-card.featured::before {
-    content: 'PAID PLAN';
-    position: absolute;
-    top: 24px; right: 24px;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 4px 10px;
-  }
-  .pricing-tag {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    display: block;
-  }
-  .pricing-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    line-height: 1;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-  .pricing-period {
-    font-size: 13px;
-    opacity: 0.4;
-    margin-bottom: 36px;
-    letter-spacing: 1px;
-  }
-  .pricing-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-bottom: 40px;
-  }
-  .pricing-features li {
-    font-size: 13px;
-    opacity: 0.7;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    line-height: 1.5;
-  }
-  .pricing-features li::before {
-    content: '→';
-    color: var(--gold);
-    flex-shrink: 0;
-  }
-  .pricing-btn {
-    display: block;
-    text-align: center;
-    padding: 14px 32px;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s;
-  }
-  .pricing-card:not(.featured) .pricing-btn {
-    border: 1px solid rgba(255,255,255,0.2);
-    color: var(--white);
-  }
-  .pricing-card:not(.featured) .pricing-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-  .pricing-card.featured .pricing-btn {
-    background: var(--gold);
-    color: var(--black);
-    font-weight: 500;
-  }
-  .pricing-card.featured .pricing-btn:hover { background: var(--gold2); }
-
-  /* STATS */
-  .stats {
-    padding: 100px 60px;
-    background: var(--gold);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-  }
-  .stat {
-    padding: 40px;
-    text-align: center;
-    background: var(--gold);
-    border-right: 1px solid rgba(10,10,8,0.15);
-  }
-  .stat:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    color: var(--black);
-    line-height: 1;
-    letter-spacing: 2px;
-  }
-  .stat-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(10,10,8,0.6);
-    margin-top: 8px;
-  }
-
-  /* CONTACT / CTA */
-  .contact {
-    padding: 160px 60px;
-    background: var(--dark);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .contact::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 600px 400px at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .contact-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(60px, 10vw, 140px);
-    line-height: 0.9;
-    letter-spacing: 2px;
-    margin-bottom: 32px;
-    position: relative;
-  }
-  .contact-title span { color: var(--gold); }
-  .contact-sub {
-    font-size: 15px;
-    opacity: 0.5;
-    max-width: 400px;
-    margin: 0 auto 48px;
-    line-height: 1.7;
-  }
-  .contact-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 20px 48px;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.4s;
-  }
-  .contact-btn:hover {
-    background: var(--gold);
-    color: var(--black);
-    gap: 24px;
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 48px 60px;
-    background: var(--black);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
-    color: var(--gold);
-  }
-  .footer-copy {
-    font-size: 12px;
-    opacity: 0.3;
-    letter-spacing: 1px;
-  }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 24px 28px; }
-    .nav-links { display: none; }
-    .hero { padding: 80px 28px; }
-    .hero-dots { right: 28px; bottom: 60px; }
-    .offer, .how, .work, .pricing, .contact { padding: 100px 28px; }
-    .offer-grid { grid-template-columns: 1fr; gap: 60px; }
-    .steps { grid-template-columns: 1fr; }
-    .pricing-cards { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: 1fr 1fr; }
-    .work-card { min-width: 280px; height: 380px; }
-    footer { padding: 36px 28px; flex-direction: column; gap: 16px; text-align: center; }
-  }
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
-
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">YOUR AGENCY</div>
-  <ul class="nav-links">
-    <li><a href="#offer">What We Offer</a></li>
-    <li><a href="#work">Our Work</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-slides" id="heroSlides">
-    <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1616469829581-73993eb86b02?w=1800&q=80')"></div>
-    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1800&q=80')"></div>
-    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=1800&q=80')"></div>
-    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1800&q=80')"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-tag reveal">Digital Marketing Agency — India</div>
-    <h1 class="hero-title reveal reveal-delay-1">
-      We Make<br><em>Brands</em><br>Unforgettable
-    </h1>
-    <p class="hero-sub reveal reveal-delay-2">
-      High-quality reels, corporate videos & daily content — crafted to grow your business from day one.
-    </p>
-    <a href="#offer" class="hero-cta reveal reveal-delay-3">
-      Start Free <span class="hero-cta-arrow">→</span>
-    </a>
-  </div>
-  <div class="hero-dots" id="heroDots">
-    <div class="hero-dot active" data-index="0"></div>
-    <div class="hero-dot" data-index="1"></div>
-    <div class="hero-dot" data-index="2"></div>
-    <div class="hero-dot" data-index="3"></div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- OFFER -->
-<section class="offer" id="offer">
-  <div class="section-label reveal">What We Offer</div>
-  <div class="offer-grid">
-    <div class="offer-left">
-      <h2 class="reveal">Your First Month<br>Is On <span>Us.</span></h2>
-      <p class="reveal reveal-delay-1">
-        We believe in earning your trust through results — not promises. That's why we give you a complete content campaign for free. No contracts, no risk.
-      </p>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Grey Inn Stays</h1>
+      <p>Room board</p>
     </div>
-    <div class="offer-cards">
-      <div class="offer-card reveal reveal-delay-1">
-        <div class="offer-icon">🎬</div>
-        <div class="offer-card-text">
-          <h3>4 Reel Videos</h3>
-          <p>Professionally shot & edited short-form videos for Instagram & Facebook</p>
-        </div>
-      </div>
-      <div class="offer-card reveal reveal-delay-2">
-        <div class="offer-icon">🎥</div>
-        <div class="offer-card-text">
-          <h3>1 Corporate Video</h3>
-          <p>Brand story, product showcase or company profile — cinematic quality</p>
-        </div>
-      </div>
-      <div class="offer-card reveal reveal-delay-3">
-        <div class="offer-icon">🖼️</div>
-        <div class="offer-card-text">
-          <h3>Daily Posters</h3>
-          <p>30 custom-designed social media graphics over the month</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="clock"><span id="time">--:--</span><small id="date"></small></div>
+  </header>
 
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="section-label reveal">Process</div>
-  <h2 class="how-title reveal">How It <span>Works</span></h2>
-  <div class="steps">
-    <div class="step reveal">
-      <span class="step-num">01</span>
-      <h3>We Approach You</h3>
-      <p>We reach out to local businesses, understand your brand, and create a content strategy tailored specifically for you.</p>
-      <div class="step-line"></div>
-    </div>
-    <div class="step reveal reveal-delay-1">
-      <span class="step-num">02</span>
-      <h3>Free Month Campaign</h3>
-      <p>We deliver 4 reels, 1 corporate video, and 30 daily posters — completely free. You see real results before spending a rupee.</p>
-      <div class="step-line"></div>
-    </div>
-    <div class="step reveal reveal-delay-2">
-      <span class="step-num">03</span>
-      <h3>You Decide</h3>
-      <p>If you love the results, continue with our ₹7,000/month plan. If not — no pressure, no hard feelings. Simple as that.</p>
-      <div class="step-line"></div>
-    </div>
-  </div>
-</section>
+  <section class="stats" aria-label="Room summary and filters">
+    <button class="stat" data-filter="occupied" aria-pressed="false"><span class="lbl"><i class="dot d-occ"></i>Occupied</span><span class="num" id="n-occupied">0</span></button>
+    <button class="stat" data-filter="cleaning" aria-pressed="false"><span class="lbl"><i class="dot d-cln"></i>Cleaning</span><span class="num" id="n-cleaning">0</span></button>
+    <button class="stat" data-filter="ready" aria-pressed="false"><span class="lbl"><i class="dot d-rdy"></i>Ready</span><span class="num" id="n-ready">0</span></button>
+  </section>
 
-<!-- WORK -->
-<section class="work" id="work">
-  <div class="work-header">
-    <div>
-      <div class="section-label reveal">Portfolio</div>
-      <h2 class="work-title reveal">Our <span>Work</span></h2>
-    </div>
-    <p class="work-note reveal">Sample work — your links will be added here</p>
+  <div class="sec">
+    <h2 id="floor-title">1st floor</h2>
+    <button id="reset-floor" type="button">Reset this floor</button>
   </div>
-  <div class="swiper-wrapper-outer">
-    <div class="swiper-track" id="swiperTrack">
 
-      <div class="work-card">
-        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80" alt="Reel Production"/>
-        <div class="work-card-overlay">
-          <h3>Product Reel</h3>
-          <p>Short Form Video</p>
-          <a href="YOUR_DRIVE_LINK_HERE" class="work-card-link" target="_blank">View Project →</a>
-        </div>
-      </div>
+  <main class="grid" id="grid" aria-live="polite"></main>
 
-      <div class="work-card">
-        <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600&q=80" alt="Corporate Video"/>
-        <div class="work-card-overlay">
-          <h3>Corporate Video</h3>
-          <p>Brand Film</p>
-          <a href="YOUR_DRIVE_LINK_HERE" class="work-card-link" target="_blank">View Project →</a>
-        </div>
-      </div>
-
-      <div class="work-card">
-        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80" alt="Social Media"/>
-        <div class="work-card-overlay">
-          <h3>Social Media Pack</h3>
-          <p>Daily Posters</p>
-          <a href="YOUR_DRIVE_LINK_HERE" class="work-card-link" target="_blank">View Project →</a>
-        </div>
-      </div>
-
-      <div class="work-card">
-        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&q=80" alt="Event Coverage"/>
-        <div class="work-card-overlay">
-          <h3>Event Coverage</h3>
-          <p>Photo & Video</p>
-          <a href="YOUR_DRIVE_LINK_HERE" class="work-card-link" target="_blank">View Project →</a>
-        </div>
-      </div>
-
-      <div class="work-card">
-        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80" alt="Brand Campaign"/>
-        <div class="work-card-overlay">
-          <h3>Brand Campaign</h3>
-          <p>Full Production</p>
-          <a href="YOUR_DRIVE_LINK_HERE" class="work-card-link" target="_blank">View Project →</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="swiper-nav">
-    <button class="swiper-btn" id="prevBtn">←</button>
-    <button class="swiper-btn" id="nextBtn">→</button>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="stats">
-  <div class="stat reveal">
-    <div class="stat-num">5+</div>
-    <div class="stat-label">Free Trial Clients</div>
-  </div>
-  <div class="stat reveal reveal-delay-1">
-    <div class="stat-num">4</div>
-    <div class="stat-label">Reels Per Month</div>
-  </div>
-  <div class="stat reveal reveal-delay-2">
-    <div class="stat-num">30</div>
-    <div class="stat-label">Posters Monthly</div>
-  </div>
-  <div class="stat reveal reveal-delay-3">
-    <div class="stat-num">4+</div>
-    <div class="stat-label">Years Experience</div>
-  </div>
+  <p class="hint"><b>Tap a room:</b> red when the guest checks in, white while the room is being cleaned, green when it is ready. Tap green to check in the next guest. <b>Hold a room</b> to set it back to vacant.</p>
 </div>
 
-<!-- PRICING -->
-<section class="pricing" id="pricing">
-  <div class="section-label reveal" style="justify-content:center">Pricing</div>
-  <h2 class="pricing-title reveal">Simple. <span>Honest.</span> Affordable.</h2>
-  <p class="pricing-sub reveal">No hidden fees. No long-term lock-ins. Just results.</p>
-  <div class="pricing-cards">
-    <div class="pricing-card reveal">
-      <span class="pricing-tag">Starter — Free</span>
-      <div class="pricing-price">₹0</div>
-      <div class="pricing-period">First month, no commitment</div>
-      <ul class="pricing-features">
-        <li>4 professionally edited Reels</li>
-        <li>1 Corporate / Brand Video</li>
-        <li>30 custom-designed Posters</li>
-        <li>Social media strategy</li>
-        <li>No contract required</li>
-      </ul>
-      <a href="#contact" class="pricing-btn">Get Started Free</a>
-    </div>
-    <div class="pricing-card featured reveal reveal-delay-1">
-      <span class="pricing-tag">Growth</span>
-      <div class="pricing-price">₹7K</div>
-      <div class="pricing-period">Per month, after free trial</div>
-      <ul class="pricing-features">
-        <li>Everything in Free plan</li>
-        <li>Ongoing content creation</li>
-        <li>Monthly strategy review</li>
-        <li>Priority support</li>
-        <li>Cancel anytime</li>
-      </ul>
-      <a href="#contact" class="pricing-btn">Start Free Trial</a>
-    </div>
-  </div>
-</section>
+<nav class="dock" role="tablist" aria-label="Floors">
+  <button class="tab" role="tab" data-floor="0" aria-selected="true">1st floor <span class="badge" id="b0"></span></button>
+  <button class="tab" role="tab" data-floor="1" aria-selected="false">2nd floor <span class="badge" id="b1"></span></button>
+</nav>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="section-label reveal" style="justify-content:center">Get In Touch</div>
-  <h2 class="contact-title reveal">Let's Build<br><span>Something</span><br>Great.</h2>
-  <p class="contact-sub reveal">Ready to grow your brand? We'll start your free campaign within 48 hours of getting in touch.</p>
-  <a href="mailto:your@email.com" class="contact-btn reveal reveal-delay-1">
-    Contact Us <span>→</span>
-  </a>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">YOUR AGENCY</div>
-  <div class="footer-copy">© 2025 — All rights reserved</div>
-</footer>
+<div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="undo" type="button">Undo</button></div>
 
 <script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-    setTimeout(() => {
-      ring.style.left = mx + 'px';
-      ring.style.top = my + 'px';
-    }, 80);
-  });
-  document.querySelectorAll('a, button, .hero-dot').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '24px';
-      cursor.style.height = '24px';
-      ring.style.width = '60px';
-      ring.style.height = '60px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '12px';
-      cursor.style.height = '12px';
-      ring.style.width = '36px';
-      ring.style.height = '36px';
-    });
-  });
+(function(){
+  const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+  const FLOORS=[
+    {name:'1st floor',rooms:range(201,213)},
+    {name:'2nd floor',rooms:range(301,317)}
+  ];
+  const NEXT={idle:'occupied',occupied:'cleaning',cleaning:'ready',ready:'occupied'};
+  const LABEL={idle:'Vacant',occupied:'Occupied',cleaning:'Cleaning',ready:'Ready'};
+  const ICON={
+    idle:'<svg viewBox="0 0 24 24" fill="none" stroke="#8A9BB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg>',
+    occupied:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>',
+    cleaning:'<svg viewBox="0 0 24 24" fill="none" stroke="#9A4A06" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-3 8M8 11h8l2 4H6zM6 15l-1 6M10 15l-.5 6M14 15l.5 6M18 15l1 6"/></svg>',
+    ready:'<svg viewBox="0 0 24 24" fill="none" stroke="#04301C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>'
+  };
+  const KEY='greyInnRoomBoard.v1';
+  let mem=null;
+  function load(){
+    try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
+    return mem||{};
+  }
+  function save(){
+    mem=data;
+    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+  }
+  let data=load();              // { "204": {s:'occupied', t:169...} }
+  let floor=0, filter=null, lastChange=null, toastTimer=null, popRoom=null;
 
-  // HERO SLIDESHOW
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots = document.querySelectorAll('.hero-dot');
-  let current = 0, heroTimer;
+  const $=s=>document.querySelector(s);
+  const grid=$('#grid');
 
-  function goToSlide(n) {
-    slides[current].classList.remove('active');
-    dots[current].classList.remove('active');
-    current = (n + slides.length) % slides.length;
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
+  const get=n=>data[n]||{s:'idle',t:null};
+  function ago(t){
+    if(!t)return '';
+    const m=Math.floor((Date.now()-t)/60000);
+    if(m<1)return 'just now';
+    if(m<60)return m+' min';
+    const h=Math.floor(m/60);
+    if(h<24)return h+'h '+(m%60)+'m';
+    return Math.floor(h/24)+'d '+(h%24)+'h';
   }
 
-  function startHero() {
-    heroTimer = setInterval(() => goToSlide(current + 1), 5000);
+  function render(){
+    const f=FLOORS[floor];
+    $('#floor-title').textContent=f.name;
+    grid.innerHTML=f.rooms.map(n=>{
+      const r=get(n);
+      const dim=filter&&r.s!==filter?' dim':'';
+      const pop=popRoom===n?' pop':'';
+      return `<button class="room ${r.s}${dim}${pop}" data-room="${n}" aria-label="Room ${n}, ${LABEL[r.s]}. Tap to change.">
+        <span class="ico">${ICON[r.s]}</span>
+        <span class="no">${n}</span>
+        <span><div class="st">${LABEL[r.s]}</div><div class="since">${r.t?ago(r.t):''}</div></span>
+      </button>`;
+    }).join('');
+    popRoom=null;
+    counts();
   }
-  startHero();
 
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      clearInterval(heroTimer);
-      goToSlide(parseInt(dot.dataset.index));
-      startHero();
+  function counts(){
+    const all=FLOORS.flatMap(f=>f.rooms);
+    ['occupied','cleaning','ready'].forEach(s=>{
+      $('#n-'+s).textContent=all.filter(n=>get(n).s===s).length;
     });
-  });
-
-  // SWIPER
-  const track = document.getElementById('swiperTrack');
-  const cards = track.querySelectorAll('.work-card');
-  let swiperIndex = 0;
-  const cardW = () => cards[0].offsetWidth + 20;
-  const maxIndex = () => Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardW()));
-
-  document.getElementById('nextBtn').addEventListener('click', () => {
-    if (swiperIndex < maxIndex()) {
-      swiperIndex++;
-      track.style.transform = `translateX(-${swiperIndex * cardW()}px)`;
-    }
-  });
-  document.getElementById('prevBtn').addEventListener('click', () => {
-    if (swiperIndex > 0) {
-      swiperIndex--;
-      track.style.transform = `translateX(-${swiperIndex * cardW()}px)`;
-    }
-  });
-
-  // Touch swipe
-  let touchStartX = 0;
-  track.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
-  track.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (diff > 50 && swiperIndex < maxIndex()) { swiperIndex++; track.style.transform = `translateX(-${swiperIndex * cardW()}px)`; }
-    if (diff < -50 && swiperIndex > 0) { swiperIndex--; track.style.transform = `translateX(-${swiperIndex * cardW()}px)`; }
-  });
-
-  // SCROLL REVEAL
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('visible');
+    FLOORS.forEach((f,i)=>{
+      const need=f.rooms.filter(n=>get(n).s==='cleaning').length;
+      $('#b'+i).textContent=need?need:'';
+      $('#b'+i).title=need?need+' room(s) to clean':'';
     });
-  }, { threshold: 0.15 });
-  reveals.forEach(el => observer.observe(el));
+  }
+
+  function setState(n,s,t,silent){
+    if(s==='idle'){delete data[n]}else{data[n]={s,t}}
+    save();popRoom=n;render();
+    if(navigator.vibrate)try{navigator.vibrate(s==='occupied'?30:[20,40,20])}catch(e){}
+  }
+
+  function toast(msg){
+    $('#toast-msg').textContent=msg;
+    const t=$('#toast');t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),4500);
+  }
+
+  function advance(n){
+    const cur=get(n);
+    lastChange={room:n,prev:cur.s==='idle'?null:{...cur}};
+    const next=NEXT[cur.s];
+    setState(n,next,Date.now());
+    toast('Room '+n+' → '+LABEL[next]);
+  }
+
+  // press / hold handling
+  let holdTimer=null,held=false;
+  grid.addEventListener('pointerdown',e=>{
+    const b=e.target.closest('.room');if(!b)return;
+    held=false;
+    holdTimer=setTimeout(()=>{
+      held=true;
+      const n=+b.dataset.room;
+      lastChange={room:n,prev:get(n).s==='idle'?null:{...get(n)}};
+      setState(n,'idle');
+      toast('Room '+n+' → Vacant');
+    },650);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>grid.addEventListener(ev,()=>clearTimeout(holdTimer)));
+  grid.addEventListener('click',e=>{
+    const b=e.target.closest('.room');if(!b)return;
+    if(held){held=false;return}
+    advance(+b.dataset.room);
+  });
+  grid.addEventListener('contextmenu',e=>e.preventDefault());
+
+  $('#undo').addEventListener('click',()=>{
+    if(!lastChange)return;
+    const {room,prev}=lastChange;
+    if(prev)setState(room,prev.s,prev.t);else setState(room,'idle');
+    lastChange=null;
+    $('#toast').classList.remove('show');
+  });
+
+  // floor tabs
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    floor=+t.dataset.floor;
+    document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+    render();
+  }));
+
+  // filters
+  document.querySelectorAll('.stat').forEach(b=>b.addEventListener('click',()=>{
+    filter=filter===b.dataset.filter?null:b.dataset.filter;
+    document.querySelectorAll('.stat').forEach(x=>x.setAttribute('aria-pressed',x.dataset.filter===filter));
+    render();
+  }));
+
+  $('#reset-floor').addEventListener('click',()=>{
+    if(!confirm('Set every room on the '+FLOORS[floor].name+' back to vacant?'))return;
+    FLOORS[floor].rooms.forEach(n=>delete data[n]);
+    save();render();
+  });
+
+  // clock + refresh elapsed times
+  function tick(){
+    const d=new Date();
+    $('#time').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    $('#date').textContent=d.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'});
+  }
+  tick();setInterval(tick,15000);
+  setInterval(()=>{ // refresh "since" text without replaying animations
+    document.querySelectorAll('.room').forEach(el=>{
+      const r=get(+el.dataset.room);
+      el.querySelector('.since').textContent=r.t?ago(r.t):'';
+    });
+  },30000);
+
+  render();
+})();
 </script>
 </body>
 </html>
