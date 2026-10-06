@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E2236">
+<title>Grey Inn Stays – Room Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E2236;
+  --ink-2:#16324D;
+  --mist:#C9D6E4;
+  --paper:#F7F9FC;
+  --occupied-1:#FF6B6B;
+  --occupied-2:#D62F48;
+  --ready-1:#5CE59A;
+  --ready-2:#22B866;
+  --ready-ink:#04301C;
+  --clean-ink:#9A4A06;
+  --radius:24px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Figtree','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:var(--body);
+  color:var(--paper);
+  background:var(--ink);
+  background-image:
+    radial-gradient(60vmax 40vmax at 90% -10%, rgba(255,107,107,.22), transparent 60%),
+    radial-gradient(55vmax 45vmax at -10% 20%, rgba(92,229,154,.16), transparent 60%),
+    radial-gradient(70vmax 50vmax at 50% 120%, rgba(90,140,255,.22), transparent 60%);
+  background-attachment:fixed;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
+  user-select:none;-webkit-user-select:none;
+}
+.app{max-width:960px;margin:0 auto}
+
+/* top bar */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,6vw,38px);letter-spacing:-.02em;line-height:1}
+.brand p{color:var(--mist);font-size:14px;margin-top:6px}
+.clock{text-align:right;font-family:var(--display);font-weight:700;font-size:clamp(22px,5vw,30px);letter-spacing:-.01em;line-height:1}
+.clock small{display:block;font-family:var(--body);font-weight:500;font-size:13px;color:var(--mist);margin-top:6px;letter-spacing:0}
+
+/* summary chips (also filters) */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat{
+  appearance:none;border:1px solid rgba(255,255,255,.14);cursor:pointer;color:inherit;font:inherit;text-align:left;
+  background:rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;
+  transition:transform .18s ease,background .2s,border-color .2s;
+}
+.stat:active{transform:scale(.97)}
+.stat[aria-pressed="true"]{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.55)}
+.stat .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.stat .lbl{font-size:13px;color:var(--mist);display:flex;align-items:center}
+.stat .num{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em}
+.d-occ{background:var(--occupied-1)} .d-cln{background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.35)} .d-rdy{background:var(--ready-1)}
+
+/* section head */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:6px 4px 12px}
+.sec h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em}
+.sec button{
+  appearance:none;border:0;background:transparent;color:var(--mist);font:inherit;font-size:13px;cursor:pointer;
+  padding:8px 10px;border-radius:10px;text-decoration:underline;text-underline-offset:3px
+}
+.sec button:hover{color:#fff}
+
+/* room grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+@media(min-width:820px){.grid{grid-template-columns:repeat(6,1fr)}}
+
+.room{
+  position:relative;overflow:hidden;appearance:none;border:0;cursor:pointer;font:inherit;text-align:left;
+  aspect-ratio:1/1.08;border-radius:var(--radius);padding:14px 14px 12px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--paper);color:var(--ink);
+  box-shadow:0 10px 28px -10px rgba(0,0,0,.55), inset 0 -2px 0 rgba(14,34,54,.06);
+  transition:transform .16s ease,opacity .25s,filter .25s,box-shadow .25s;
+  touch-action:manipulation;
+}
+.room:active{transform:scale(.94)}
+.room:focus-visible,.stat:focus-visible,.tab:focus-visible,.sec button:focus-visible,.toast button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.room .no{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,42px);letter-spacing:-.03em;line-height:1}
+.room .ico{position:absolute;right:12px;top:12px;width:30px;height:30px;opacity:.9}
+.room .ico svg{width:100%;height:100%}
+.room .st{font-weight:600;font-size:14px;line-height:1.2}
+.room .since{font-size:12px;opacity:.75;margin-top:2px;min-height:15px}
+
+.room.occupied{background:linear-gradient(155deg,var(--occupied-1),var(--occupied-2));color:#fff;box-shadow:0 14px 30px -10px rgba(214,47,72,.7)}
+.room.ready{background:linear-gradient(155deg,var(--ready-1),var(--ready-2));color:var(--ready-ink);box-shadow:0 14px 30px -10px rgba(34,184,102,.65)}
+.room.cleaning{color:var(--ink)}
+.room.cleaning .st{color:var(--clean-ink)}
+.room.cleaning::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,170,60,.28) 50%,transparent 65%);
+  background-size:250% 100%;animation:sweep 2.2s linear infinite;
+}
+@keyframes sweep{from{background-position:120% 0}to{background-position:-120% 0}}
+.room.dim{opacity:.22;filter:saturate(.4)}
+.room.pop{animation:pop .42s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+/* bottom floor switch */
+.dock{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;gap:6px;padding:6px;border-radius:26px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);
+  z-index:5;
+}
+.tab{
+  appearance:none;border:0;cursor:pointer;font:inherit;color:var(--mist);background:transparent;
+  padding:12px 22px;border-radius:20px;font-weight:600;font-size:15px;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;transition:background .25s,color .25s;
+}
+.tab[aria-selected="true"]{background:var(--paper);color:var(--ink)}
+.tab .badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,.9);color:#fff}
+.tab .badge:empty{display:none}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:var(--paper);color:var(--ink);padding:10px 12px 10px 16px;border-radius:16px;
+  display:flex;align-items:center;gap:14px;font-size:14px;font-weight:500;box-shadow:0 14px 34px -8px rgba(0,0,0,.6);
+  transition:opacity .25s,transform .25s;z-index:6;max-width:calc(100vw - 32px);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{appearance:none;border:0;background:var(--ink);color:#fff;font:inherit;font-weight:600;font-size:13px;padding:8px 14px;border-radius:10px;cursor:pointer}
+
+.hint{margin:22px 4px 0;color:var(--mist);font-size:13px;line-height:1.5}
+.hint b{color:#fff;font-weight:600}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Grey Inn Stays</h1>
+      <p>Room board</p>
+    </div>
+    <div class="clock"><span id="time">--:--</span><small id="date"></small></div>
+  </header>
+
+  <section class="stats" aria-label="Room summary and filters">
+    <button class="stat" data-filter="occupied" aria-pressed="false"><span class="lbl"><i class="dot d-occ"></i>Occupied</span><span class="num" id="n-occupied">0</span></button>
+    <button class="stat" data-filter="cleaning" aria-pressed="false"><span class="lbl"><i class="dot d-cln"></i>Cleaning</span><span class="num" id="n-cleaning">0</span></button>
+    <button class="stat" data-filter="ready" aria-pressed="false"><span class="lbl"><i class="dot d-rdy"></i>Ready</span><span class="num" id="n-ready">0</span></button>
+  </section>
+
+  <div class="sec">
+    <h2 id="floor-title">1st floor</h2>
+    <button id="reset-floor" type="button">Reset this floor</button>
+  </div>
+
+  <main class="grid" id="grid" aria-live="polite"></main>
+
+  <p class="hint"><b>Tap a room:</b> red when the guest checks in, white while the room is being cleaned, green when it is ready. Tap green to check in the next guest. <b>Hold a room</b> to set it back to vacant.</p>
+</div>
+
+<nav class="dock" role="tablist" aria-label="Floors">
+  <button class="tab" role="tab" data-floor="0" aria-selected="true">1st floor <span class="badge" id="b0"></span></button>
+  <button class="tab" role="tab" data-floor="1" aria-selected="false">2nd floor <span class="badge" id="b1"></span></button>
+</nav>
+
+<div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="undo" type="button">Undo</button></div>
+
+<script>
+(function(){
+  const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+  const FLOORS=[
+    {name:'1st floor',rooms:range(201,213)},
+    {name:'2nd floor',rooms:range(301,317)}
+  ];
+  const NEXT={idle:'occupied',occupied:'cleaning',cleaning:'ready',ready:'occupied'};
+  const LABEL={idle:'Vacant',occupied:'Occupied',cleaning:'Cleaning',ready:'Ready'};
+  const ICON={
+    idle:'<svg viewBox="0 0 24 24" fill="none" stroke="#8A9BB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg>',
+    occupied:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>',
+    cleaning:'<svg viewBox="0 0 24 24" fill="none" stroke="#9A4A06" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-3 8M8 11h8l2 4H6zM6 15l-1 6M10 15l-.5 6M14 15l.5 6M18 15l1 6"/></svg>',
+    ready:'<svg viewBox="0 0 24 24" fill="none" stroke="#04301C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>'
+  };
+  const KEY='greyInnRoomBoard.v1';
+  let mem=null;
+  function load(){
+    try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
+    return mem||{};
+  }
+  function save(){
+    mem=data;
+    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+  }
+  let data=load();              // { "204": {s:'occupied', t:169...} }
+  let floor=0, filter=null, lastChange=null, toastTimer=null, popRoom=null;
+
+  const $=s=>document.querySelector(s);
+  const grid=$('#grid');
+
+  const get=n=>data[n]||{s:'idle',t:null};
+  function ago(t){
+    if(!t)return '';
+    const m=Math.floor((Date.now()-t)/60000);
+    if(m<1)return 'just now';
+    if(m<60)return m+' min';
+    const h=Math.floor(m/60);
+    if(h<24)return h+'h '+(m%60)+'m';
+    return Math.floor(h/24)+'d '+(h%24)+'h';
+  }
+
+  function render(){
+    const f=FLOORS[floor];
+    $('#floor-title').textContent=f.name;
+    grid.innerHTML=f.rooms.map(n=>{
+      const r=get(n);
+      const dim=filter&&r.s!==filter?' dim':'';
+      const pop=popRoom===n?' pop':'';
+      return `<button class="room ${r.s}${dim}${pop}" data-room="${n}" aria-label="Room ${n}, ${LABEL[r.s]}. Tap to change.">
+        <span class="ico">${ICON[r.s]}</span>
+        <span class="no">${n}</span>
+        <span><div class="st">${LABEL[r.s]}</div><div class="since">${r.t?ago(r.t):''}</div></span>
+      </button>`;
+    }).join('');
+    popRoom=null;
+    counts();
+  }
+
+  function counts(){
+    const all=FLOORS.flatMap(f=>f.rooms);
+    ['occupied','cleaning','ready'].forEach(s=>{
+      $('#n-'+s).textContent=all.filter(n=>get(n).s===s).length;
+    });
+    FLOORS.forEach((f,i)=>{
+      const need=f.rooms.filter(n=>get(n).s==='cleaning').length;
+      $('#b'+i).textContent=need?need:'';
+      $('#b'+i).title=need?need+' room(s) to clean':'';
+    });
+  }
+
+  function setState(n,s,t,silent){
+    if(s==='idle'){delete data[n]}else{data[n]={s,t}}
+    save();popRoom=n;render();
+    if(navigator.vibrate)try{navigator.vibrate(s==='occupied'?30:[20,40,20])}catch(e){}
+  }
+
+  function toast(msg){
+    $('#toast-msg').textContent=msg;
+    const t=$('#toast');t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),4500);
+  }
+
+  function advance(n){
+    const cur=get(n);
+    lastChange={room:n,prev:cur.s==='idle'?null:{...cur}};
+    const next=NEXT[cur.s];
+    setState(n,next,Date.now());
+    toast('Room '+n+' → '+LABEL[next]);
+  }
+
+  // press / hold handling
+  let holdTimer=null,held=false;
+  grid.addEventListener('pointerdown',e=>{
+    const b=e.target.closest('.room');if(!b)return;
+    held=false;
+    holdTimer=setTimeout(()=>{
+      held=true;
+      const n=+b.dataset.room;
+      lastChange={room:n,prev:get(n).s==='idle'?null:{...get(n)}};
+      setState(n,'idle');
+      toast('Room '+n+' → Vacant');
+    },650);
+  });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>grid.addEventListener(ev,()=>clearTimeout(holdTimer)));
+  grid.addEventListener('click',e=>{
+    const b=e.target.closest('.room');if(!b)return;
+    if(held){held=false;return}
+    advance(+b.dataset.room);
+  });
+  grid.addEventListener('contextmenu',e=>e.preventDefault());
+
+  $('#undo').addEventListener('click',()=>{
+    if(!lastChange)return;
+    const {room,prev}=lastChange;
+    if(prev)setState(room,prev.s,prev.t);else setState(room,'idle');
+    lastChange=null;
+    $('#toast').classList.remove('show');
+  });
+
+  // floor tabs
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    floor=+t.dataset.floor;
+    document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
+    render();
+  }));
+
+  // filters
+  document.querySelectorAll('.stat').forEach(b=>b.addEventListener('click',()=>{
+    filter=filter===b.dataset.filter?null:b.dataset.filter;
+    document.querySelectorAll('.stat').forEach(x=>x.setAttribute('aria-pressed',x.dataset.filter===filter));
+    render();
+  }));
+
+  $('#reset-floor').addEventListener('click',()=>{
+    if(!confirm('Set every room on the '+FLOORS[floor].name+' back to vacant?'))return;
+    FLOORS[floor].rooms.forEach(n=>delete data[n]);
+    save();render();
+  });
+
+  // clock + refresh elapsed times
+  function tick(){
+    const d=new Date();
+    $('#time').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    $('#date').textContent=d.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'});
+  }
+  tick();setInterval(tick,15000);
+  setInterval(()=>{ // refresh "since" text without replaying animations
+    document.querySelectorAll('.room').forEach(el=>{
+      const r=get(+el.dataset.room);
+      el.querySelector('.since').textContent=r.t?ago(r.t):'';
+    });
+  },30000);
+
+  render();
+})();
+</script>
+</body>
+</html>
