@@ -7,38 +7,29 @@
 <title>Grey Inn Stays – Room Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0E2236;
-  --ink-2:#16324D;
-  --mist:#C9D6E4;
-  --paper:#F7F9FC;
-  --occupied-1:#FF6B6B;
-  --occupied-2:#D62F48;
-  --ready-1:#5CE59A;
-  --ready-2:#22B866;
-  --ready-ink:#04301C;
-  --clean-ink:#9A4A06;
-  --radius:24px;
+  --ink:#0E2236; --ink-2:#16324D; --mist:#C9D6E4; --paper:#F7F9FC;
+  --occupied-1:#FF6B6B; --occupied-2:#D62F48;
+  --ready-1:#5CE59A; --ready-2:#22B866; --ready-ink:#04301C;
+  --clean-ink:#9A4A06; --radius:24px;
   --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
   --body:'Figtree','Segoe UI',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 html,body{min-height:100%}
 body{
-  font-family:var(--body);
-  color:var(--paper);
-  background:var(--ink);
+  font-family:var(--body);color:var(--paper);background:var(--ink);
   background-image:
     radial-gradient(60vmax 40vmax at 90% -10%, rgba(255,107,107,.22), transparent 60%),
     radial-gradient(55vmax 45vmax at -10% 20%, rgba(92,229,154,.16), transparent 60%),
     radial-gradient(70vmax 50vmax at 50% 120%, rgba(90,140,255,.22), transparent 60%);
   background-attachment:fixed;
   padding:max(18px,env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
-  user-select:none;-webkit-user-select:none;
 }
 .app{max-width:960px;margin:0 auto}
+.nosel{user-select:none;-webkit-user-select:none}
 
 /* top bar */
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px}
@@ -47,52 +38,64 @@ body{
 .clock{text-align:right;font-family:var(--display);font-weight:700;font-size:clamp(22px,5vw,30px);letter-spacing:-.01em;line-height:1}
 .clock small{display:block;font-family:var(--body);font-weight:500;font-size:13px;color:var(--mist);margin-top:6px;letter-spacing:0}
 
+.page[hidden]{display:none}
+.page{animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* glass card */
+.card{
+  background:rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:16px;margin-bottom:14px;
+}
+.card h3{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.01em;margin-bottom:12px}
+.card p.sub{color:var(--mist);font-size:13px;line-height:1.5}
+
 /* summary chips (also filters) */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
 .stat{
   appearance:none;border:1px solid rgba(255,255,255,.14);cursor:pointer;color:inherit;font:inherit;text-align:left;
   background:rgba(255,255,255,.07);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;
+  border-radius:18px;padding:10px 11px;display:flex;flex-direction:column;gap:6px;
   transition:transform .18s ease,background .2s,border-color .2s;
 }
 .stat:active{transform:scale(.97)}
 .stat[aria-pressed="true"]{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.55)}
-.stat .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
-.stat .lbl{font-size:13px;color:var(--mist);display:flex;align-items:center}
-.stat .num{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em}
+.stat .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;flex:none}
+.stat .lbl{font-size:12px;color:var(--mist);display:flex;align-items:center}
+.stat .num{font-family:var(--display);font-weight:800;font-size:28px;line-height:1;letter-spacing:-.02em}
 .d-occ{background:var(--occupied-1)} .d-cln{background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.35)} .d-rdy{background:var(--ready-1)}
 
 /* section head */
-.sec{display:flex;align-items:center;justify-content:space-between;margin:6px 4px 12px}
+.sec{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px;flex-wrap:wrap}
 .sec h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em}
-.sec button{
+.linkbtn{
   appearance:none;border:0;background:transparent;color:var(--mist);font:inherit;font-size:13px;cursor:pointer;
   padding:8px 10px;border-radius:10px;text-decoration:underline;text-underline-offset:3px
 }
-.sec button:hover{color:#fff}
+.linkbtn:hover{color:#fff}
+.seg{display:flex;gap:4px;padding:4px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
+.seg button{appearance:none;border:0;font:inherit;font-weight:600;font-size:14px;cursor:pointer;color:var(--mist);background:transparent;padding:8px 14px;border-radius:12px;transition:background .2s,color .2s}
+.seg button[aria-selected="true"]{background:var(--paper);color:var(--ink)}
 
 /* room grid */
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(min-width:560px){.grid{grid-template-columns:repeat(4,1fr);gap:14px}}
 @media(min-width:820px){.grid{grid-template-columns:repeat(6,1fr)}}
-
 .room{
   position:relative;overflow:hidden;appearance:none;border:0;cursor:pointer;font:inherit;text-align:left;
   aspect-ratio:1/1.08;border-radius:var(--radius);padding:14px 14px 12px;
   display:flex;flex-direction:column;justify-content:space-between;
   background:var(--paper);color:var(--ink);
   box-shadow:0 10px 28px -10px rgba(0,0,0,.55), inset 0 -2px 0 rgba(14,34,54,.06);
-  transition:transform .16s ease,opacity .25s,filter .25s,box-shadow .25s;
-  touch-action:manipulation;
+  transition:transform .16s ease,opacity .25s,filter .25s,box-shadow .25s;touch-action:manipulation;
 }
 .room:active{transform:scale(.94)}
-.room:focus-visible,.stat:focus-visible,.tab:focus-visible,.sec button:focus-visible,.toast button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .room .no{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,42px);letter-spacing:-.03em;line-height:1}
 .room .ico{position:absolute;right:12px;top:12px;width:30px;height:30px;opacity:.9}
 .room .ico svg{width:100%;height:100%}
 .room .st{font-weight:600;font-size:14px;line-height:1.2}
 .room .since{font-size:12px;opacity:.75;margin-top:2px;min-height:15px}
-
 .room.occupied{background:linear-gradient(155deg,var(--occupied-1),var(--occupied-2));color:#fff;box-shadow:0 14px 30px -10px rgba(214,47,72,.7)}
 .room.ready{background:linear-gradient(155deg,var(--ready-1),var(--ready-2));color:var(--ready-ink);box-shadow:0 14px 30px -10px rgba(34,184,102,.65)}
 .room.cleaning{color:var(--ink)}
@@ -106,24 +109,108 @@ body{
 .room.dim{opacity:.22;filter:saturate(.4)}
 .room.pop{animation:pop .42s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.hint{margin:22px 4px 0;color:var(--mist);font-size:13px;line-height:1.5}
+.hint b{color:#fff;font-weight:600}
 
-/* bottom floor switch */
+/* availability page */
+.hero{
+  border-radius:28px;padding:22px 20px;margin-bottom:14px;color:var(--ready-ink);
+  background:linear-gradient(155deg,var(--ready-1),var(--ready-2));box-shadow:0 18px 40px -14px rgba(34,184,102,.7);
+}
+.hero .big{font-family:var(--display);font-weight:800;font-size:clamp(64px,18vw,96px);line-height:.9;letter-spacing:-.04em}
+.hero .big small{font-size:.32em;font-weight:700;letter-spacing:-.01em;margin-left:8px;opacity:.75}
+.hero .t{font-weight:700;font-size:17px;margin-top:8px}
+.hero .v{font-size:14px;margin-top:4px;opacity:.85}
+.hero .fl{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hero .fl span{background:rgba(4,48,28,.14);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:600}
+
+.form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{
+  display:flex;align-items:center;background:var(--paper);color:var(--ink);border-radius:14px;padding:0 12px;min-width:0;
+}
+.field span{font-weight:600;color:#5B6B7F;margin-right:6px;font-size:13px}
+.field input,.field select{
+  border:0;background:transparent;font:inherit;font-weight:700;font-size:17px;color:var(--ink);
+  padding:11px 0;outline:none;min-width:0;width:90px;text-align:right;
+}
+.field select{width:auto;text-align:left;padding-right:4px}
+.field:focus-within{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+.btn{
+  appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:14px;padding:12px 18px;border-radius:14px;
+  background:var(--ready-1);color:var(--ready-ink);transition:transform .15s;
+}
+.btn:active{transform:scale(.96)}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff}
+.btn.danger{background:rgba(255,107,107,.2);color:#FFB3B3}
+
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{
+  display:flex;align-items:center;gap:14px;padding:10px 12px 10px 16px;border-radius:18px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+}
+.row .rn{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.03em;line-height:1;min-width:64px}
+.row .rf{flex:1;color:var(--mist);font-size:13px;line-height:1.3}
+.row .rf b{display:block;color:#fff;font-weight:600;font-size:14px}
+.row .tag{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ready-1);margin-right:6px}
+.empty{padding:22px 16px;text-align:center;color:var(--mist);font-size:14px;line-height:1.5;border:1px dashed rgba(255,255,255,.25);border-radius:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.12);font-weight:600;font-size:13px}
+.chip.w{background:var(--paper);color:var(--ink)}
+.lbl2{font-size:13px;color:var(--mist);margin:12px 0 6px}
+details.card summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:18px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary::after{content:"+";font-size:22px;color:var(--mist)}
+details.card[open] summary::after{content:"–"}
+.rategrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px}
+@media(min-width:560px){.rategrid{grid-template-columns:repeat(3,1fr)}}
+.rategrid .cell{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.08);border-radius:14px;padding:6px 6px 6px 12px}
+.rategrid .cell b{font-family:var(--display);font-size:18px;font-weight:800}
+.rategrid .field input{width:64px;font-size:15px;padding:8px 0}
+.rategrid .field{border-radius:10px;padding:0 8px}
+.rategrid .fh{grid-column:1/-1;color:var(--mist);font-size:13px;margin-top:6px}
+
+/* details page */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:640px){.metrics{grid-template-columns:repeat(3,1fr)}}
+.metric{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:14px}
+.metric .k{font-size:13px;color:var(--mist)}
+.metric .n{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em;margin-top:6px;line-height:1.05;word-break:break-word}
+.meter{height:14px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;display:flex;margin:10px 0 8px}
+.meter i{display:block;height:100%;transition:width .5s ease}
+.m-occ{background:linear-gradient(90deg,var(--occupied-1),var(--occupied-2))}
+.m-cln{background:#fff}
+.m-rdy{background:linear-gradient(90deg,var(--ready-1),var(--ready-2))}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mist)}
+.legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 6px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--mist);font-size:12px;border-bottom:1px solid rgba(255,255,255,.18)}
+td{border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+tr:last-child td{border-bottom:0}
+.log{list-style:none;padding:0;display:flex;flex-direction:column}
+.log li{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+.log li:last-child{border-bottom:0}
+.log time{color:var(--mist);min-width:88px;font-size:13px;padding-top:1px}
+.steps{padding-left:18px;color:var(--mist);font-size:14px;line-height:1.7}
+.steps b{color:#fff}
+
+/* bottom dock */
 .dock{
-  position:fixed;left:50%;transform:translateX(-50%);
-  bottom:calc(16px + env(safe-area-inset-bottom));
-  display:flex;gap:6px;padding:6px;border-radius:26px;
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;gap:4px;padding:6px;border-radius:26px;
   background:rgba(255,255,255,.12);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
-  border:1px solid rgba(255,255,255,.22);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);
-  z-index:5;
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 18px 40px -12px rgba(0,0,0,.6);z-index:5;
 }
 .tab{
   appearance:none;border:0;cursor:pointer;font:inherit;color:var(--mist);background:transparent;
-  padding:12px 22px;border-radius:20px;font-weight:600;font-size:15px;white-space:nowrap;
+  padding:12px 16px;border-radius:20px;font-weight:600;font-size:15px;white-space:nowrap;
   display:flex;align-items:center;gap:8px;transition:background .25s,color .25s;
 }
 .tab[aria-selected="true"]{background:var(--paper);color:var(--ink)}
-.tab .badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,.9);color:#fff}
-.tab .badge:empty{display:none}
+.badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,.95);color:#fff}
+.badge.g{background:var(--ready-2);color:#fff}
+.badge:empty{display:none}
 
 /* toast */
 .toast{
@@ -136,79 +223,244 @@ body{
 .toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .toast button{appearance:none;border:0;background:var(--ink);color:#fff;font:inherit;font-weight:600;font-size:13px;padding:8px 14px;border-radius:10px;cursor:pointer}
 
-.hint{margin:22px 4px 0;color:var(--mist);font-size:13px;line-height:1.5}
-.hint b{color:#fff;font-weight:600}
-
-@media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
+.d-chk{background:#FFC857}
+.room.inspect{background:linear-gradient(155deg,#FFD166,#F59E0B);color:#3D2600;box-shadow:0 14px 30px -10px rgba(245,158,11,.7)}
+.room .flag{
+  position:absolute;right:12px;bottom:12px;width:24px;height:24px;border-radius:50%;
+  background:var(--ink);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center;
+  box-shadow:0 0 0 2px rgba(255,255,255,.8);
 }
+.m-chk{background:linear-gradient(90deg,#FFD166,#F59E0B)}
+.badge.a{background:#F59E0B;color:#2b1a00}
+.sub{color:var(--mist);font-size:13px;line-height:1.5}
+.overlay{position:fixed;inset:0;background:rgba(5,12,20,.62);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.overlay[hidden]{display:none}
+.sheet{
+  width:100%;max-width:560px;max-height:92vh;overflow:auto;background:#162B42;border:1px solid rgba(255,255,255,.18);
+  border-radius:28px 28px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom));animation:rise .3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes rise{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin-bottom:6px;outline:none}
+.tglgrid{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.tgl{
+  appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;font:inherit;font-weight:600;font-size:15px;
+  text-align:left;padding:13px 14px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  transition:background .15s,color .15s;
+}
+.tgl i{width:22px;height:22px;border-radius:7px;border:2px solid currentColor;display:grid;place-items:center;font-style:normal;font-size:14px;opacity:.6;flex:none}
+.tgl[aria-pressed="true"]{background:#FFC857;color:#3D2600;border-color:#FFC857}
+.tgl[aria-pressed="true"] i{opacity:1}
+.tgl[aria-pressed="true"] i::before{content:"✓"}
+.sheet textarea{
+  width:100%;background:var(--paper);color:var(--ink);border:0;border-radius:14px;padding:12px;font:inherit;font-size:15px;resize:vertical;min-height:76px;
+}
+.chk{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:14px;font-weight:600;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:#F59E0B}
+.issue{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px;margin-bottom:8px}
+.issue .ih{display:flex;align-items:center;gap:12px}
+.issue .rn2{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.03em;line-height:1}
+.issue .form-row{justify-content:space-between}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand">
-      <h1>Grey Inn Stays</h1>
-      <p>Room board</p>
-    </div>
+    <div class="brand"><h1>Grey Inn Stays</h1><p id="page-name">Room board</p></div>
     <div class="clock"><span id="time">--:--</span><small id="date"></small></div>
   </header>
 
-  <section class="stats" aria-label="Room summary and filters">
-    <button class="stat" data-filter="occupied" aria-pressed="false"><span class="lbl"><i class="dot d-occ"></i>Occupied</span><span class="num" id="n-occupied">0</span></button>
-    <button class="stat" data-filter="cleaning" aria-pressed="false"><span class="lbl"><i class="dot d-cln"></i>Cleaning</span><span class="num" id="n-cleaning">0</span></button>
-    <button class="stat" data-filter="ready" aria-pressed="false"><span class="lbl"><i class="dot d-rdy"></i>Ready</span><span class="num" id="n-ready">0</span></button>
+  <!-- PAGE 1: BOARD -->
+  <section class="page nosel" id="page-board">
+    <div class="stats" aria-label="Room summary and filters">
+      <button class="stat" data-filter="occupied" aria-pressed="false"><span class="lbl"><i class="dot d-occ"></i>Occupied</span><span class="num" id="n-occupied">0</span></button>
+      <button class="stat" data-filter="inspect" aria-pressed="false"><span class="lbl"><i class="dot d-chk"></i>To check</span><span class="num" id="n-inspect">0</span></button>
+      <button class="stat" data-filter="cleaning" aria-pressed="false"><span class="lbl"><i class="dot d-cln"></i>Cleaning</span><span class="num" id="n-cleaning">0</span></button>
+      <button class="stat" data-filter="ready" aria-pressed="false"><span class="lbl"><i class="dot d-rdy"></i>Ready</span><span class="num" id="n-ready">0</span></button>
+    </div>
+    <div class="sec">
+      <div class="seg" role="tablist" aria-label="Floors" id="floor-seg"></div>
+      <button class="linkbtn" id="reset-floor" type="button">Reset this floor</button>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="hint"><b>Tap a room:</b> red when the guest checks in. When the guest leaves, tap again and it turns amber: <b>check pending</b>. Tap the amber room to check for damage, missing items or complaints. After the check it turns white for cleaning, then tap again for green when it is ready. <b>Hold a room</b> to set it back to vacant. A dark ! on a room means it has an open issue.</p>
   </section>
 
-  <div class="sec">
-    <h2 id="floor-title">1st floor</h2>
-    <button id="reset-floor" type="button">Reset this floor</button>
-  </div>
+  <!-- PAGE 2: AVAILABLE -->
+  <section class="page" id="page-avail" hidden>
+    <div class="hero">
+      <div class="big"><span id="h-ready">0</span><small id="h-total">of 0</small></div>
+      <div class="t">Rooms ready to sell</div>
+      <div class="v" id="h-value"></div>
+      <div class="fl" id="h-floors"></div>
+    </div>
 
-  <main class="grid" id="grid" aria-live="polite"></main>
+    <div class="card">
+      <h3>Set one rate for many rooms</h3>
+      <div class="form-row">
+        <label class="field"><span id="cur-a"></span><input id="bulk-rate" type="number" inputmode="decimal" min="0" placeholder="0" aria-label="Rate"></label>
+        <label class="field"><select id="bulk-scope" aria-label="Apply to">
+          <option value="all">All rooms</option>
+          <option value="f0">1st floor</option>
+          <option value="f1">2nd floor</option>
+          <option value="ready">Ready rooms only</option>
+        </select></label>
+        <button class="btn" id="bulk-apply" type="button">Apply rate</button>
+      </div>
+    </div>
 
-  <p class="hint"><b>Tap a room:</b> red when the guest checks in, white while the room is being cleaned, green when it is ready. Tap green to check in the next guest. <b>Hold a room</b> to set it back to vacant.</p>
+    <div class="sec"><h2>Ready rooms</h2></div>
+    <div class="rows" id="ready-list"></div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Not ready yet</h3>
+      <div class="lbl2" style="margin-top:0">Blocked for repair</div><div class="chips" id="c-blocked"></div><div class="lbl2">Waiting for check</div><div class="chips" id="c-inspect"></div><div class="lbl2">Being cleaned</div><div class="chips" id="c-cleaning"></div>
+      <div class="lbl2">Vacant, not marked yet</div><div class="chips" id="c-idle"></div>
+      <div class="lbl2">Occupied</div><div class="chips" id="c-occupied"></div>
+    </div>
+
+    <details class="card" id="all-rates">
+      <summary>Rate for every room</summary>
+      <div class="rategrid" id="rate-grid"></div>
+    </details>
+  </section>
+
+  <!-- PAGE 3: DETAILS -->
+  <section class="page" id="page-details" hidden>
+    <div class="card">
+      <h3>Occupancy right now</h3>
+      <div style="display:flex;align-items:baseline;gap:10px"><span class="metric n" style="all:unset;font-family:var(--display);font-weight:800;font-size:44px;letter-spacing:-.03em" id="d-pct">0%</span><span class="sub" style="color:var(--mist);font-size:14px" id="d-pct-sub"></span></div>
+      <div class="meter" aria-hidden="true"><i class="m-occ" id="m-occ"></i><i class="m-chk" id="m-chk"></i><i class="m-cln" id="m-cln"></i><i class="m-rdy" id="m-rdy"></i></div>
+      <div class="legend">
+        <span><i class="dot d-occ"></i>Occupied</span><span><i class="dot d-chk"></i>To check</span><span><i class="dot d-cln"></i>Cleaning</span><span><i class="dot d-rdy"></i>Ready</span>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="k">Total rooms</div><div class="n" id="v-total">0</div></div>
+      <div class="metric"><div class="k">Vacant, not marked</div><div class="n" id="v-idle">0</div></div>
+      <div class="metric"><div class="k">In-house value</div><div class="n" id="v-house">0</div></div>
+      <div class="metric"><div class="k">Ready to sell value</div><div class="n" id="v-ready">0</div></div>
+      <div class="metric"><div class="k">Open issues</div><div class="n" id="v-issues">0</div></div>
+      <div class="metric"><div class="k">Damage charges</div><div class="n" id="v-charge">0</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Open issues</h3>
+      <div id="issues"></div>
+    </div>
+
+    <div class="card">
+      <h3>By floor</h3>
+      <table>
+        <thead><tr><th>Floor</th><th>Rooms</th><th>Occupied</th><th>To check</th><th>Cleaning</th><th>Ready</th></tr></thead>
+        <tbody id="floor-table"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Recent activity</h3>
+      <ul class="log" id="log"></ul>
+      <div class="form-row" style="margin-top:12px">
+        <button class="btn ghost" id="export" type="button">Download log (CSV)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Settings</h3>
+      <div class="form-row">
+        <label class="field"><span>Currency</span><input id="set-cur" type="text" maxlength="4" style="width:56px" aria-label="Currency"></label>
+        <label class="field"><span>Default rate</span><input id="set-def" type="number" inputmode="decimal" min="0" aria-label="Default rate"></label>
+      </div>
+      <p class="sub" style="margin-top:10px">Rooms without their own rate use the default rate.</p>
+      <div class="form-row" style="margin-top:14px">
+        <button class="btn danger" id="reset-all" type="button">Reset all rooms, rates and log</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>How the system works</h3>
+      <ol class="steps">
+        <li><b>Board:</b> tap a room: red (occupied), amber (guest left, check pending), white (cleaning), green (ready).</li>
+        <li><b>Check:</b> tap an amber room and tick any damage, missing items or complaints. Issues stay on the room and show in Details until you mark them fixed.</li>
+        <li><b>Available:</b> shows every green room and its rate. Edit any rate and it saves at once.</li>
+        <li><b>Details:</b> occupancy, value of rooms, floor totals and the activity log.</li>
+        <li>Everything is saved in this browser on this device. Use the same device each shift.</li>
+      </ol>
+    </div>
+  </section>
 </div>
 
-<nav class="dock" role="tablist" aria-label="Floors">
-  <button class="tab" role="tab" data-floor="0" aria-selected="true">1st floor <span class="badge" id="b0"></span></button>
-  <button class="tab" role="tab" data-floor="1" aria-selected="false">2nd floor <span class="badge" id="b1"></span></button>
+<nav class="dock" role="tablist" aria-label="Pages">
+  <button class="tab" role="tab" data-page="board" aria-selected="true">Board <span class="badge a" id="b-board"></span></button>
+  <button class="tab" role="tab" data-page="avail" aria-selected="false">Available <span class="badge g" id="b-avail"></span></button>
+  <button class="tab" role="tab" data-page="details" aria-selected="false">Details</button>
 </nav>
-
+<div class="overlay" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title">
+    <h3 id="sh-title">Check room</h3>
+    <p class="sub">The guest has left. Look for damage, missing items or complaints before cleaning. Tick anything you find.</p>
+    <div id="sh-prev"></div>
+    <div class="tglgrid" id="sh-items"></div>
+    <div id="sh-extra" hidden>
+      <label class="lbl2" for="sh-note">What did you find?</label>
+      <textarea id="sh-note" rows="3" placeholder="Example: TV remote missing, curtain torn"></textarea>
+      <div class="form-row" style="margin-top:10px">
+        <label class="field"><span id="sh-cur"></span><input id="sh-charge" type="number" inputmode="decimal" min="0" placeholder="0" aria-label="Damage charge"></label>
+        <span class="sub">Damage charge for the guest</span>
+      </div>
+      <label class="chk"><input type="checkbox" id="sh-block">Block this room from sale until it is fixed</label>
+    </div>
+    <div class="form-row" style="margin-top:18px">
+      <button class="btn" id="sh-go" type="button">All clear, start cleaning</button>
+      <button class="btn ghost" id="sh-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="undo" type="button">Undo</button></div>
 
 <script>
 (function(){
   const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
-  const FLOORS=[
-    {name:'1st floor',rooms:range(201,213)},
-    {name:'2nd floor',rooms:range(301,317)}
-  ];
-  const NEXT={idle:'occupied',occupied:'cleaning',cleaning:'ready',ready:'occupied'};
-  const LABEL={idle:'Vacant',occupied:'Occupied',cleaning:'Cleaning',ready:'Ready'};
+  const FLOORS=[{name:'1st floor',rooms:range(201,213)},{name:'2nd floor',rooms:range(301,317)}];
+  const ALL=FLOORS.flatMap(f=>f.rooms);
+  const NEXT={idle:'occupied',occupied:'inspect',cleaning:'ready',ready:'occupied'};
+  const LABEL={idle:'Vacant',occupied:'Occupied',inspect:'Check pending',cleaning:'Cleaning',ready:'Ready'};
   const ICON={
     idle:'<svg viewBox="0 0 24 24" fill="none" stroke="#8A9BB0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.6"/></svg>',
     occupied:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>',
+    inspect:'<svg viewBox="0 0 24 24" fill="none" stroke="#3D2600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M9 11l1.6 1.6L13.5 9.5"/></svg>',
     cleaning:'<svg viewBox="0 0 24 24" fill="none" stroke="#9A4A06" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l-3 8M8 11h8l2 4H6zM6 15l-1 6M10 15l-.5 6M14 15l.5 6M18 15l1 6"/></svg>',
     ready:'<svg viewBox="0 0 24 24" fill="none" stroke="#04301C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>'
   };
-  const KEY='greyInnRoomBoard.v1';
-  let mem=null;
-  function load(){
-    try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
-    return mem||{};
-  }
-  function save(){
-    mem=data;
-    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
-  }
-  let data=load();              // { "204": {s:'occupied', t:169...} }
-  let floor=0, filter=null, lastChange=null, toastTimer=null, popRoom=null;
-
+  const PAGES={board:'Room board',avail:'Available rooms',details:'Details'};
+  const K1='greyInnRoomBoard.v1', K2='greyInnRoomBoard.v2';
   const $=s=>document.querySelector(s);
-  const grid=$('#grid');
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  const get=n=>data[n]||{s:'idle',t:null};
+  // ---------- data ----------
+  let mem=null;
+  function fresh(){return{rooms:{},rates:{},settings:{currency:'AED',defaultRate:150},log:[],issues:{}}}
+  function load(){
+    const d=fresh();
+    try{
+      const r2=localStorage.getItem(K2);
+      if(r2){const o=JSON.parse(r2);return{rooms:o.rooms||{},rates:o.rates||{},settings:Object.assign(d.settings,o.settings||{}),log:o.log||[],issues:o.issues||{}}}
+      const r1=localStorage.getItem(K1);          // migrate from first version
+      if(r1){d.rooms=JSON.parse(r1)||{}}
+    }catch(e){ if(mem)return mem }
+    return d;
+  }
+  let db=load();
+  function save(){mem=db;try{localStorage.setItem(K2,JSON.stringify(db))}catch(e){}}
+
+  const st=n=>db.rooms[n]||{s:'idle',t:null};
+  const rate=n=>db.rates[n]!=null?db.rates[n]:db.settings.defaultRate;
+  const money=v=>esc(db.settings.currency)+' '+Math.round(v).toLocaleString();
+  const inState=s=>ALL.filter(n=>st(n).s===s);
+  const blocked=n=>!!(db.issues[n]&&db.issues[n].blocked);
+  const sellable=()=>inState('ready').filter(n=>!blocked(n));
+  const hm=t=>new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   function ago(t){
     if(!t)return '';
     const m=Math.floor((Date.now()-t)/60000);
@@ -218,67 +470,197 @@ body{
     if(h<24)return h+'h '+(m%60)+'m';
     return Math.floor(h/24)+'d '+(h%24)+'h';
   }
+  function floorOf(n){return FLOORS.findIndex(f=>f.rooms.includes(n))}
 
-  function render(){
-    const f=FLOORS[floor];
-    $('#floor-title').textContent=f.name;
-    grid.innerHTML=f.rooms.map(n=>{
-      const r=get(n);
-      const dim=filter&&r.s!==filter?' dim':'';
-      const pop=popRoom===n?' pop':'';
-      return `<button class="room ${r.s}${dim}${pop}" data-room="${n}" aria-label="Room ${n}, ${LABEL[r.s]}. Tap to change.">
-        <span class="ico">${ICON[r.s]}</span>
-        <span class="no">${n}</span>
-        <span><div class="st">${LABEL[r.s]}</div><div class="since">${r.t?ago(r.t):''}</div></span>
-      </button>`;
-    }).join('');
-    popRoom=null;
-    counts();
+  // ---------- state ----------
+  let page='board', floor=0, filter=null, lastChange=null, toastTimer=null, popRoom=null;
+
+  function addLog(e){
+    e.t=Date.now();db.log.unshift(e);
+    if(db.log.length>300)db.log.length=300;
   }
-
-  function counts(){
-    const all=FLOORS.flatMap(f=>f.rooms);
-    ['occupied','cleaning','ready'].forEach(s=>{
-      $('#n-'+s).textContent=all.filter(n=>get(n).s===s).length;
-    });
-    FLOORS.forEach((f,i)=>{
-      const need=f.rooms.filter(n=>get(n).s==='cleaning').length;
-      $('#b'+i).textContent=need?need:'';
-      $('#b'+i).title=need?need+' room(s) to clean':'';
-    });
-  }
-
-  function setState(n,s,t,silent){
-    if(s==='idle'){delete data[n]}else{data[n]={s,t}}
-    save();popRoom=n;render();
+  function setState(n,s,t,logEntry){
+    if(s==='idle')delete db.rooms[n];else db.rooms[n]={s,t};
+    if(logEntry)addLog(logEntry);
+    save();popRoom=n;renderAll();
     if(navigator.vibrate)try{navigator.vibrate(s==='occupied'?30:[20,40,20])}catch(e){}
   }
-
-  function toast(msg){
+  function toast(msg,showUndo=true){
     $('#toast-msg').textContent=msg;
+    $('#undo').style.display=showUndo?'':'none';
     const t=$('#toast');t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>t.classList.remove('show'),4500);
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),4500);
   }
-
   function advance(n){
-    const cur=get(n);
+    const cur=st(n);
+    if(cur.s==='inspect'){openSheet(n);return}
     lastChange={room:n,prev:cur.s==='idle'?null:{...cur}};
     const next=NEXT[cur.s];
-    setState(n,next,Date.now());
+    setState(n,next,Date.now(),{room:n,from:cur.s,to:next});
     toast('Room '+n+' → '+LABEL[next]);
   }
 
-  // press / hold handling
-  let holdTimer=null,held=false;
+  // ---------- render: board ----------
+  function renderBoard(){
+    $('#floor-seg').innerHTML=FLOORS.map((f,i)=>`<button role="tab" data-floor="${i}" aria-selected="${i===floor}">${f.name}</button>`).join('');
+    $('#grid').innerHTML=FLOORS[floor].rooms.map(n=>{
+      const r=st(n);
+      const dim=filter&&r.s!==filter?' dim':'';
+      const pop=popRoom===n?' pop':'';
+      return `<button class="room ${r.s}${dim}${pop}" data-room="${n}" aria-label="Room ${n}, ${LABEL[r.s]}. Tap to change.">
+        <span class="ico">${ICON[r.s]}</span>${db.issues[n]?'<span class="flag" title="Open issue">!</span>':''}<span class="no">${n}</span>
+        <span><div class="st">${LABEL[r.s]}</div><div class="since">${r.t?ago(r.t):''}</div></span></button>`;
+    }).join('');
+    popRoom=null;
+    ['occupied','inspect','cleaning','ready'].forEach(s=>$('#n-'+s).textContent=inState(s).length);
+  }
+
+  // ---------- render: available ----------
+  function rateField(n,small){
+    return `<label class="field"><span>${esc(db.settings.currency)}</span><input class="rate-in" data-room="${n}" type="number" inputmode="decimal" min="0" value="${db.rates[n]!=null?db.rates[n]:''}" placeholder="${db.settings.defaultRate}" aria-label="Rate for room ${n}"></label>`;
+  }
+  function refreshMoney(){
+    const ready=sellable(),occ=inState('occupied');
+    $('#h-value').textContent=ready.length?('Worth '+db.settings.currency+' '+Math.round(ready.reduce((a,n)=>a+rate(n),0)).toLocaleString()+' at current rates'):'Mark rooms green on the Board after cleaning';
+    $('#v-ready').innerHTML=money(ready.reduce((a,n)=>a+rate(n),0));
+    $('#v-house').innerHTML=money(occ.reduce((a,n)=>a+rate(n),0));
+  }
+  function renderAvail(){
+    const ready=sellable();
+    $('#h-ready').textContent=ready.length;
+    $('#h-total').textContent='of '+ALL.length;
+    $('#cur-a').textContent=db.settings.currency;
+    $('#h-floors').innerHTML=FLOORS.map(f=>`<span>${f.name}: ${sellable().filter(n=>f.rooms.includes(n)).length}</span>`).join('');
+    $('#ready-list').innerHTML=ready.length?ready.map(n=>`<div class="row">
+        <div class="rn">${n}</div>
+        <div class="rf"><b><i class="tag"></i>Ready</b>${FLOORS[floorOf(n)].name}, clean for ${ago(st(n).t)||'now'}</div>
+        ${rateField(n)}</div>`).join(''):
+      '<div class="empty">No rooms are ready yet.<br>Rooms appear here when you turn them green on the Board.</div>';
+    const chips=(arr,cls)=>arr.length?arr.map(n=>`<span class="chip ${cls||''}">${n}</span>`).join(''):'<span style="color:var(--mist);font-size:13px">None</span>';
+    $('#c-cleaning').innerHTML=chips(inState('cleaning'),'w');
+    $('#c-inspect').innerHTML=chips(inState('inspect'));
+    $('#c-blocked').innerHTML=chips(ALL.filter(blocked));
+    $('#c-idle').innerHTML=chips(inState('idle'));
+    $('#c-occupied').innerHTML=chips(inState('occupied'));
+    $('#rate-grid').innerHTML=FLOORS.map(f=>`<div class="fh">${f.name}</div>`+f.rooms.map(n=>`<div class="cell"><b>${n}</b>${rateField(n,true)}</div>`).join('')).join('');
+    refreshMoney();
+  }
+
+  // ---------- render: details ----------
+  function renderDetails(){
+    const occ=inState('occupied').length,chk=inState('inspect').length,cln=inState('cleaning').length,rdy=inState('ready').length,idl=inState('idle').length,tot=ALL.length;
+    $('#d-pct').textContent=Math.round(occ/tot*100)+'%';
+    $('#d-pct-sub').textContent=occ+' of '+tot+' rooms occupied';
+    $('#m-occ').style.width=(occ/tot*100)+'%';$('#m-chk').style.width=(chk/tot*100)+'%';$('#m-cln').style.width=(cln/tot*100)+'%';$('#m-rdy').style.width=(rdy/tot*100)+'%';
+    $('#v-total').textContent=tot;$('#v-idle').textContent=idl;
+    $('#floor-table').innerHTML=FLOORS.map(f=>{
+      const c=s=>f.rooms.filter(n=>st(n).s===s).length;
+      return `<tr><td>${f.name}</td><td>${f.rooms.length}</td><td>${c('occupied')}</td><td>${c('inspect')}</td><td>${c('cleaning')}</td><td>${c('ready')}</td></tr>`;
+    }).join('');
+    const iss=Object.keys(db.issues).map(Number).sort((a,b)=>a-b);
+    $('#v-issues').textContent=iss.length;
+    $('#v-charge').innerHTML=money(iss.reduce((a,n)=>a+(db.issues[n].charge||0),0));
+    $('#issues').innerHTML=iss.length?iss.map(n=>{
+      const i=db.issues[n],a=ago(i.t),when=a==='just now'?'found just now':'found '+a+' ago';
+      return `<div class="issue"><div class="ih"><span class="rn2">${n}</span><span class="sub">${FLOORS[floorOf(n)].name}, ${when}${i.blocked?', blocked from sale':''}</span></div>
+        <div class="chips" style="margin:10px 0 4px">${i.items.map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>
+        ${i.note?`<p class="sub" style="color:#fff;margin-top:8px">${esc(i.note)}</p>`:''}
+        <div class="form-row" style="margin-top:10px"><span class="sub">${i.charge?'Charge '+money(i.charge):'No charge'}</span><button class="btn ghost fix-btn" data-room="${n}" type="button">Mark fixed</button></div></div>`;
+    }).join(''):'<div class="empty">No open issues.<br>Problems you find during a check will show here.</div>';
+    const today=new Date().toDateString();
+    $('#log').innerHTML=db.log.length?db.log.slice(0,40).map(e=>{
+      const d=new Date(e.t);
+      const when=(d.toDateString()===today?'':d.toLocaleDateString([],{day:'numeric',month:'short'})+' ')+hm(e.t);
+      const txt=e.note||('Room '+e.room+' → '+LABEL[e.to]);
+      return `<li><time>${when}</time><span>${esc(txt)}</span></li>`;
+    }).join(''):'<li style="color:var(--mist)">Changes you make on the Board will show here.</li>';
+    const sc=$('#set-cur'),sd=$('#set-def');
+    if(document.activeElement!==sc)sc.value=db.settings.currency;
+    if(document.activeElement!==sd)sd.value=db.settings.defaultRate;
+    refreshMoney();
+  }
+
+  function renderBadges(){
+    $('#b-board').textContent=inState('inspect').length||'';
+    $('#b-avail').textContent=sellable().length||'';
+  }
+  function renderAll(){
+    renderBadges();
+    if(page==='board')renderBoard();
+    if(page==='avail')renderAvail();
+    if(page==='details')renderDetails();
+  }
+  function go(p){
+    page=p;
+    document.querySelectorAll('.page').forEach(s=>s.hidden=s.id!=='page-'+p);
+    document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.page===p));
+    $('#page-name').textContent=PAGES[p];
+    $('#toast').classList.remove('show');
+    window.scrollTo(0,0);renderAll();
+  }
+
+  // ---------- check before cleaning ----------
+  const ITEMS=['Damage to furniture or walls','Bathroom or plumbing problem','AC, TV or electrical problem','Linen or towels stained or missing','Missing items','Smoking or bad smell','Guest complaint'];
+  let sheetRoom=null,sheetSel=new Set();
+  function sheetUI(){
+    const k=sheetSel.size;
+    $('#sh-extra').hidden=!k;
+    $('#sh-go').textContent=k?'Save findings, start cleaning':'All clear, start cleaning';
+  }
+  function openSheet(n){
+    sheetRoom=n;sheetSel=new Set();
+    $('#sh-title').textContent='Check room '+n;
+    $('#sh-cur').textContent=db.settings.currency;
+    $('#sh-note').value='';$('#sh-charge').value='';$('#sh-block').checked=false;
+    const ex=db.issues[n];
+    $('#sh-prev').innerHTML=ex?`<div class="empty" style="text-align:left;margin-top:12px">Open issue from earlier: ${esc(ex.items.join(', '))}${ex.note?'. '+esc(ex.note):''}</div>`:'';
+    $('#sh-items').innerHTML=ITEMS.map((t,i)=>`<button type="button" class="tgl" data-i="${i}" aria-pressed="false">${t}<i></i></button>`).join('');
+    sheetUI();
+    $('#sheet').hidden=false;document.body.style.overflow='hidden';
+    const t=$('#sh-title');t.setAttribute('tabindex','-1');t.focus();
+  }
+  function closeSheet(){$('#sheet').hidden=true;document.body.style.overflow='';sheetRoom=null}
+  function finishCheck(){
+    const n=sheetRoom;if(n==null)return;
+    const items=[...sheetSel].sort((a,b)=>a-b).map(i=>ITEMS[i]);
+    const cur=st(n);
+    lastChange={room:n,prev:{...cur},issuePrev:db.issues[n]?JSON.parse(JSON.stringify(db.issues[n])):null};
+    if(items.length){
+      db.issues[n]={items,note:$('#sh-note').value.trim(),charge:Math.max(0,+$('#sh-charge').value||0),blocked:$('#sh-block').checked,t:Date.now()};
+      addLog({room:n,note:'Room '+n+' checked: '+items.join(', ')});
+    }else{
+      addLog({room:n,note:'Room '+n+' checked: all clear'});
+    }
+    closeSheet();
+    setState(n,'cleaning',Date.now(),{room:n,from:'inspect',to:'cleaning'});
+    toast(items.length?'Room '+n+': issue saved, now Cleaning':'Room '+n+': all clear, now Cleaning');
+  }
+  $('#sh-items').addEventListener('click',e=>{
+    const b=e.target.closest('.tgl');if(!b)return;
+    const i=+b.dataset.i;
+    if(sheetSel.has(i))sheetSel.delete(i);else sheetSel.add(i);
+    b.setAttribute('aria-pressed',sheetSel.has(i));sheetUI();
+  });
+  $('#sh-go').addEventListener('click',finishCheck);
+  $('#sh-cancel').addEventListener('click',closeSheet);
+  $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden)closeSheet()});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('.fix-btn');if(!b)return;
+    const n=+b.dataset.room;
+    delete db.issues[n];addLog({room:n,note:'Room '+n+' issue marked fixed'});
+    save();renderAll();toast('Room '+n+' issue fixed',false);
+  });
+
+  // ---------- events: board ----------
+  const grid=$('#grid');let holdTimer=null,held=false;
   grid.addEventListener('pointerdown',e=>{
     const b=e.target.closest('.room');if(!b)return;
     held=false;
     holdTimer=setTimeout(()=>{
-      held=true;
-      const n=+b.dataset.room;
-      lastChange={room:n,prev:get(n).s==='idle'?null:{...get(n)}};
-      setState(n,'idle');
+      held=true;const n=+b.dataset.room,cur=st(n);
+      lastChange={room:n,prev:cur.s==='idle'?null:{...cur}};
+      setState(n,'idle',null,{room:n,from:cur.s,to:'idle'});
       toast('Room '+n+' → Vacant');
     },650);
   });
@@ -289,50 +671,88 @@ body{
     advance(+b.dataset.room);
   });
   grid.addEventListener('contextmenu',e=>e.preventDefault());
-
   $('#undo').addEventListener('click',()=>{
     if(!lastChange)return;
-    const {room,prev}=lastChange;
-    if(prev)setState(room,prev.s,prev.t);else setState(room,'idle');
-    lastChange=null;
-    $('#toast').classList.remove('show');
+    const {room,prev}=lastChange,cur=st(room).s,back=prev?prev.s:'idle';
+    if('issuePrev' in lastChange){if(lastChange.issuePrev)db.issues[room]=lastChange.issuePrev;else delete db.issues[room]}
+    setState(room,back,prev?prev.t:null,{room,from:cur,to:back,note:'Undo: Room '+room+' back to '+LABEL[back]});
+    lastChange=null;$('#toast').classList.remove('show');
   });
-
-  // floor tabs
-  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
-    floor=+t.dataset.floor;
-    document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===t));
-    render();
-  }));
-
-  // filters
+  $('#floor-seg').addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;
+    floor=+b.dataset.floor;renderBoard();
+  });
   document.querySelectorAll('.stat').forEach(b=>b.addEventListener('click',()=>{
     filter=filter===b.dataset.filter?null:b.dataset.filter;
     document.querySelectorAll('.stat').forEach(x=>x.setAttribute('aria-pressed',x.dataset.filter===filter));
-    render();
+    renderBoard();
   }));
-
   $('#reset-floor').addEventListener('click',()=>{
     if(!confirm('Set every room on the '+FLOORS[floor].name+' back to vacant?'))return;
-    FLOORS[floor].rooms.forEach(n=>delete data[n]);
-    save();render();
+    FLOORS[floor].rooms.forEach(n=>delete db.rooms[n]);
+    addLog({room:null,note:FLOORS[floor].name+' reset to vacant'});
+    save();renderAll();
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.page)));
+
+  // ---------- events: rates ----------
+  document.addEventListener('input',e=>{
+    const i=e.target.closest('.rate-in');if(!i)return;
+    const n=+i.dataset.room,v=i.value.trim();
+    if(v===''||isNaN(+v)||+v<0)delete db.rates[n];else db.rates[n]=+v;
+    document.querySelectorAll('.rate-in[data-room="'+n+'"]').forEach(o=>{if(o!==i)o.value=i.value});
+    save();refreshMoney();
+    // update the ready total without rebuilding the list (keeps keyboard open)
+  });
+  $('#bulk-apply').addEventListener('click',()=>{
+    const v=$('#bulk-rate').value.trim();
+    if(v===''||isNaN(+v)||+v<0){toast('Enter a rate first',false);return}
+    const sc=$('#bulk-scope').value;
+    const targets=sc==='all'?ALL:sc==='ready'?inState('ready'):FLOORS[+sc.slice(1)].rooms;
+    if(!targets.length){toast('No rooms to apply to',false);return}
+    targets.forEach(n=>db.rates[n]=+v);
+    addLog({room:null,note:'Rate '+db.settings.currency+' '+(+v)+' set for '+targets.length+' room'+(targets.length>1?'s':'')});
+    save();renderAvail();
+    toast('Rate saved for '+targets.length+' room'+(targets.length>1?'s':''),false);
   });
 
-  // clock + refresh elapsed times
+  // ---------- events: settings ----------
+  $('#set-cur').addEventListener('change',e=>{
+    db.settings.currency=e.target.value.trim()||'AED';save();renderAll();
+  });
+  $('#set-def').addEventListener('change',e=>{
+    const v=+e.target.value;db.settings.defaultRate=isNaN(v)||v<0?0:v;save();renderAll();
+  });
+  $('#export').addEventListener('click',()=>{
+    const rows=[['Date','Time','Room','From','To','Note']].concat(db.log.slice().reverse().map(e=>{
+      const d=new Date(e.t);
+      return [d.toLocaleDateString(),hm(e.t),e.room||'',e.from?LABEL[e.from]:'',e.to?LABEL[e.to]:'',e.note||''];
+    }));
+    const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download='grey-inn-log.csv';document.body.appendChild(a);a.click();a.remove();
+  });
+  $('#reset-all').addEventListener('click',()=>{
+    if(!confirm('Delete all room statuses, custom rates and the activity log? This cannot be undone.'))return;
+    const s=db.settings;db=fresh();db.settings=s;save();renderAll();
+  });
+
+  // ---------- clock ----------
   function tick(){
     const d=new Date();
     $('#time').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     $('#date').textContent=d.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'});
   }
   tick();setInterval(tick,15000);
-  setInterval(()=>{ // refresh "since" text without replaying animations
+  setInterval(()=>{
+    if(page!=='board')return;
     document.querySelectorAll('.room').forEach(el=>{
-      const r=get(+el.dataset.room);
-      el.querySelector('.since').textContent=r.t?ago(r.t):'';
+      const r=st(+el.dataset.room);el.querySelector('.since').textContent=r.t?ago(r.t):'';
     });
   },30000);
 
-  render();
+  renderAll();
 })();
 </script>
 </body>
